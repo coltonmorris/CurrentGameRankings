@@ -1,0 +1,32 @@
+{
+  "name": "current_game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./node_modules/mocha/bin/mocha",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coltonmorris/CurrentGameRankings.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/coltonmorris/CurrentGameRankings/issues"
+  },
+  "homepage": "https://github.com/coltonmorris/CurrentGameRankings#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "leagueapi": "^0.4.21",
+    "mocha": "^3.2.0"
+  },
+  "devDependencies": {
+    "bluebird": "^3.4.6",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "mocha": "^3.2.0",
+    "superagent": "^3.1.0"
+  }
+}
