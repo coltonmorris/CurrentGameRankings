@@ -8,16 +8,12 @@ chai.use(chaiAsPromised)
 let summonerInGame = 'cris'
 let summonerOutOfGame = 'Kingrazy'
 
-describe('test for /currentGameRankings', function () {
+describe('tests for endpoint: /currentGameRankings', function () {
   it('should return an error because the summoner is not in a game', function () {
     return expect(
       request
         .get('localhost:3000/currentGameRankings')
         .query({ summonerName: summonerOutOfGame })
-        .then((res) => {
-          console.log('bad summoner test: ')
-          return res
-        })
     ).to.eventually.be.rejected
   })
    it('should hit the endpoint successfully', function () {
