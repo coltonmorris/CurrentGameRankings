@@ -2,7 +2,10 @@
 
 let express   = require('express')
 let app       = express()
+let bodyParser = require('body-parser')
 let currentGameRankings = require('./currentGameRankings')
+
+app.use(bodyParser.json())
 
 app.get('/currentGameRankings', (req, res) => {
   currentGameRankings(req.query.summonerName)
@@ -12,6 +15,22 @@ app.get('/currentGameRankings', (req, res) => {
   .catch((err) => {
     res.status(500).send({ error: err.message})
   })
+})
+
+
+app.post('/currentGameRankings', (req, res) => {
+  currentGameRankings(req.body.summonerName)
+  .then((rankings) => {
+    res.send(rankings)
+  })
+  .catch((err) => {
+    res.status(500).send({ error: err.message})
+  })
+})
+
+app.get('/hey', (req, res) => {
+  console.log('visiting')
+  res.send('Hey, you are cute')
 })
 
 app.get('/', (req, res) => {
