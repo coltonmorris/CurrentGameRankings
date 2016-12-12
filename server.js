@@ -28,14 +28,19 @@ app.post('/currentGameRankings', (req, res) => {
   })
 })
 
+app.get('/Christy', (req, res) => {
+  console.log('visiting /christy')
+  res.send('Skype me?')
+})
+
 app.get('/hey', (req, res) => {
-  console.log('visiting')
+  console.log('visiting /hey')
   res.send('Hey, you are cute')
 })
 
 app.get('/', (req, res) => {
   console.log('request just came in')
-  res.send('FUCK YOU JASPER')
+  res.send('Coltons space for making cool shit')
 })
 
 
