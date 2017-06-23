@@ -1,0 +1,19 @@
+apiVersion: apps/v1beta1 # for versions before 1.6.0 use extensions/v1beta1
+kind: Deployment
+metadata:
+  name: current-game
+  namespace: website
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        tier: backend
+    spec:
+      containers:
+      - name: current-game-rankings
+        image: current-game-rankings
+        #image: gcr.io/my-website?/current-game-rankings?
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
