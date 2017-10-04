@@ -4,6 +4,8 @@ let express   = require('express')
 let app       = express()
 let bodyParser = require('body-parser')
 let currentGameRankings = require('./currentGameRankings')
+let host = 'localhost'
+let port = 80
 
 app.use(bodyParser.json())
 
@@ -44,6 +46,7 @@ app.get('/', (req, res) => {
 })
 
 
-app.listen(8080, () => {
-  console.log('Server is listening on port 8080')
+app.listen(port, host, () => {
+  console.log(`Server is listening on port ${port}`)
+       
 })
