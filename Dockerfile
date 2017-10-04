@@ -1,17 +1,18 @@
-From node:boron
+From node:6-alpine
 
 #create app directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+RUN mkdir /app
+
 
 # Install dependencies
-COPY package.json /usr/src/app
-COPY node_modules/ /usr/src/app
-RUN npm install
+COPY ./package.json /app
+COPY ./server.js /app
+COPY ./currentGameRankings.js /app
 
-# Bundle app source
-COPY . /usr/src/app
+COPY ./node_modules/ /app/node_modules
+COPY ./test/ /app/test
 
+WORKDIR /app
 EXPOSE 8080
 
 CMD [ "npm", "start" ]

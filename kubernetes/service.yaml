@@ -4,11 +4,17 @@ metadata:
   name: current-game
   namespace: website
 spec:
+  # TODO: Either make your spin up your own Nginx, or use GCE to continue the
+  #     deployment process and load-balancing
+
+  # Automatically create an external load-balanced IP for this service
+  # type: LoadBalancer
   selector:
     tier: backend
   ports:
     - protocol: TCP
       port: 80
       targetPort: 8080
+      # Used to set up your own load balancers
       nodePort: 30001
   type: NodePort

@@ -1,12 +1,24 @@
+# We are using minikubes ingress controller addon:
+#   minikube addons enable ingress
+# This exposes a default Nginx backend pod for handling requests
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: test-ingress
+  namespace: website
 spec:
+  backend:
+    # required default backend
+    serviceName: default-http-backend
+    servicePort: 80
   rules:
   - http:
-    paths:
-    - path: /
-      backend:
-        serviceName: current-game
-        servicePort: 80
+      paths:
+      - path: /
+        backend:
+          serviceName: current-game
+          servicePort: 80
+      - path: /hey
+        backend:
+          serviceName: current-game
+          servicePort: 80
