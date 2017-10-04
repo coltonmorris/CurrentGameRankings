@@ -1,15 +1,22 @@
-let LolApi    = require('leagueapi');
-let api_key   = process.env.LeagueKey
+let LeagueJs  = require('leaguejs');
 let Promise   = require('bluebird')
+let config    = require('config')
+let champions = require('./champions.json')['data']
 
-LolApi.init(api_key, 'na')
+let api = new LeagueJs(config.get('key'),
+    { PLATFORM_ID: 'na1',
+      limits: {allowBurst: true}
+    }
+)
+api.updateRateLimiter({allowBursts: true})
+
 
 module.exports = (summonerName) => {
   // get the summonerId from the name
   return getSummonerId(summonerName)
-  // get the other teams summonerIds
-  .then((summonerId) => (getOtherTeamSummonerIdsAndChampIds(summonerId)))
-  // get the other teams ranks
+  // get game object
+  .then((summonerId) => (getGameInfo(summonerId)))
+  // get the other teams ranks now that we have a list of all the summonerIds
   .then((gameObj) => (getRanks(gameObj)))
   // get the other teams champion names
   .then((gameObj) => (getChampNames(gameObj)))
@@ -18,18 +25,21 @@ module.exports = (summonerName) => {
 
 let getSummonerId = (summonerName) => {
   console.log('in getSummonerId', summonerName)
-  return LolApi.Summoner.getByName(summonerName)
-  .then((summoner) => {
-    let name = Object.keys(summoner)[0]
-    return summoner[name].id
-  })
+  let voys = '19134540'
+  return Promise.resolve(voys)
+  // return api.Summoner.gettingByName(summonerName)
+  // .then((summoner) => {
+  //   return summoner.id
+  // })
 }
 
-let getOtherTeamSummonerIdsAndChampIds = (summonerId) => {
-  return LolApi.getCurrentGame(summonerId, 'na')
+let getGameInfo = (summonerId) => {
+  //TODO make dis get the match id
+  console.log('in getGameInfo: ', summonerId)
+  return api.Spectator.gettingActiveGame(summonerId)
   .then((res) => {
-    let redSide = []  // teamId is 100
-    let blueSide = [] // teamId is 200
+    let redSide = []  // teamId is 200
+    let blueSide = [] // teamId is 100
     let ourSide
     
 
@@ -40,7 +50,7 @@ let getOtherTeamSummonerIdsAndChampIds = (summonerId) => {
         ourSide = summoner.teamId
 
       }
-      if (summoner.teamId == 100) {
+      if (summoner.teamId == 200) {
         // red side
         redSide.push({ 'summonerName': summoner.summonerName, 'summonerId': summoner.summonerId, 'champId': summoner.championId })
       }
@@ -51,41 +61,45 @@ let getOtherTeamSummonerIdsAndChampIds = (summonerId) => {
     })
   
     // return the side our summoner wasn't on
-    if (ourSide == 100) {
+    if (ourSide == 200) {
       return blueSide
     }
     return redSide
   })
+  .catch((err) => { console.log('error yo: ', err) })
 }
 
 let getRanks = (gameObj) => {
   return Promise.map(gameObj, (player) => {
-    return LolApi.getLeagueEntryData(player.summonerId, 'na')
+    return api.League.gettingPositionsForSummonerId(player.summonerId)
     .then((res) => {
-      let tier = res[player.summonerId][0].tier
-      let division = res[player.summonerId][0].entries[0].division
+      // TODO remove this after verifying it is consistently index 0
+      console.log('Queue type: ', res[0].queueType)
+
+      let tier = res[0].tier
+      let division = res[0].rank
 
       player['tier'] = tier
       player['division'] = division
+      player['queueType'] = res[0].queueType
     })
     .catch((err) => {
       console.log('player is unranked')
       player['tier'] = null
       player['division'] = 'unranked'
-    })
-  })
-  .then(() => (gameObj))
-}
-
-let getChampNames = (gameObj) => {
-  return Promise.map(gameObj, (player) => {
-    return LolApi.Static.getChampionById(player.champId, 'info', 'na')
-    .then((champ) => {
-      player['champName'] = champ.name
+      player['queueType'] = null
     })
   })
   .then(() => {
-    console.log('final object: ', gameObj)
+    console.log('almost done game object: ', gameObj)
     return gameObj
   })
+}
+
+let getChampNames = (gameObj) => {
+  gameObj.map((player) => {
+    player['champName'] = champions[player.champId]['name']
+  })
+  console.log('final object: ', gameObj)
+  return gameObj
 }

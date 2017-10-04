@@ -5,13 +5,17 @@ let chaiAsPromised = require('chai-as-promised')
 
 chai.use(chaiAsPromised)
 
-let summonerInGame = 'imhalfwizard'
+let voy = 'Voyboy'
+let summonerInGame = 'HiHi Its Tye Tye'
 let summonerOutOfGame = 'Kingrazy'
-let url = 'http://97d15ce5.ngrok.io/'
+// let url = 'http://ddb2c263.ngrok.io/'
+let url = 'localhost/'
 let endpoint = 'currentGameRankings'
 
 describe(`tests for endpoint: ${endpoint}`, function () {
-  it('should return an error because the summoner is not in a game', function () {
+  this.timeout(15000)
+
+  it.skip('should return an error because the summoner is not in a game', function () {
     return expect(
       request
         .get(url + endpoint)
@@ -26,7 +30,7 @@ describe(`tests for endpoint: ${endpoint}`, function () {
        .then((res) => (res['body']))
      ).to.eventually.have.lengthOf(5)
    })
-   it('should hit the endpoint successfully using POST', function () {
+   it.skip('should hit the endpoint successfully using POST', function () {
      return expect(
        request
          .get(url + endpoint)

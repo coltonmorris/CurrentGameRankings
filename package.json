@@ -19,8 +19,9 @@
   "homepage": "https://github.com/coltonmorris/CurrentGameRankings#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "config": "^1.26.2",
     "express": "^4.14.0",
-    "leagueapi": "^0.4.21",
+    "leaguejs": "^1.5.3",
     "mocha": "^3.2.0"
   },
   "devDependencies": {
