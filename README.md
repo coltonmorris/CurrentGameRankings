@@ -3,9 +3,11 @@ This is a webserver that exposes a single enpoint '/currentGameRankings', which 
 
 ### Info
 --- 
-Riot Games API keys expire after a day, so remember to update it:
-```bash
-set -xg LeagueKey this_is_the_key
+This project uses [node-config](https://github.com/lorenwest/node-config) for the api key. Add the file ```default.json``` in the config directory with the following structure:
+``` json
+{
+  "key": "your api key"
+}
 ```
 
 Use ngrok to create a public url for the api.ai webhook
