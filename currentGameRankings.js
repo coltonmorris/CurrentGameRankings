@@ -25,12 +25,10 @@ module.exports = (summonerName) => {
 
 let getSummonerId = (summonerName) => {
   console.log('in getSummonerId', summonerName)
-  let voys = '19134540'
-  return Promise.resolve(voys)
-  // return api.Summoner.gettingByName(summonerName)
-  // .then((summoner) => {
-  //   return summoner.id
-  // })
+  return api.Summoner.gettingByName(summonerName)
+  .then((summoner) => {
+    return summoner.id
+  })
 }
 
 let getGameInfo = (summonerId) => {
@@ -38,6 +36,7 @@ let getGameInfo = (summonerId) => {
   console.log('in getGameInfo: ', summonerId)
   return api.Spectator.gettingActiveGame(summonerId)
   .then((res) => {
+    console.log('check here for ranks: ', res)
     let redSide = []  // teamId is 200
     let blueSide = [] // teamId is 100
     let ourSide
@@ -73,9 +72,6 @@ let getRanks = (gameObj) => {
   return Promise.map(gameObj, (player) => {
     return api.League.gettingPositionsForSummonerId(player.summonerId)
     .then((res) => {
-      // TODO remove this after verifying it is consistently index 0
-      console.log('Queue type: ', res[0].queueType)
-
       let tier = res[0].tier
       let division = res[0].rank
 
@@ -90,10 +86,7 @@ let getRanks = (gameObj) => {
       player['queueType'] = null
     })
   })
-  .then(() => {
-    console.log('almost done game object: ', gameObj)
-    return gameObj
-  })
+  .then(() => (gameObj))
 }
 
 let getChampNames = (gameObj) => {
